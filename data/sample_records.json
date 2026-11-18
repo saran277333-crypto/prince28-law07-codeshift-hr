@@ -26,4 +26,175 @@
     "topic": "Social Security",
     "effective_from": "2020-09-28"
   }
+  ,
+{
+  "id": "004",
+  "law": "Code on Wages, 2019",
+  "section": "Section 5 - Payment of minimum rate of wages",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Minimum Wages",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/15793/1/aA2019-29.pdf"
+},
+{
+  "id": "005",
+  "law": "Code on Wages, 2019",
+  "section": "Section 6 - Fixation of minimum wages",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Minimum Wages",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/15793/1/aA2019-29.pdf"
+},
+{
+  "id": "006",
+  "law": "Code on Wages, 2019",
+  "section": "Section 7 - Components of minimum wages",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Minimum Wages",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/15793/1/aA2019-29.pdf"
+},
+{
+  "id": "007",
+  "law": "Code on Wages, 2019",
+  "section": "Section 9 - Power of Central Government to fix floor wage",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Floor Wage",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/15793/1/aA2019-29.pdf"
+},
+{
+  "id": "008",
+  "law": "Industrial Relations Code, 2020",
+  "section": "Section 3 - Works Committee",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Industrial Relations",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22040/1/A2020-35.pdf"
+},
+{
+  "id": "009",
+  "law": "Industrial Relations Code, 2020",
+  "section": "Section 4 - Grievance Redressal Committee",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Employee Grievances",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22040/1/A2020-35.pdf"
+},
+{
+  "id": "010",
+  "law": "Industrial Relations Code, 2020",
+  "section": "Section 14 - Recognition of negotiating union or negotiating council",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Trade Unions",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22040/1/A2020-35.pdf"
+},
+{
+  "id": "011",
+  "law": "Industrial Relations Code, 2020",
+  "section": "Section 62 - Prohibition of strikes and lock-outs",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Strikes and Lock-outs",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22040/1/A2020-35.pdf"
+},
+{
+  "id": "012",
+  "law": "Code on Social Security, 2020",
+  "section": "Section 17 - Contribution in respect of employees and contractors",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Provident Fund",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf"
+},
+{
+  "id": "013",
+  "law": "Code on Social Security, 2020",
+  "section": "Section 28 - All employees to be insured",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Employee Insurance",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf"
+},
+{
+  "id": "014",
+  "law": "Code on Social Security, 2020",
+  "section": "Section 29 - Contributions",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Employee Insurance",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf"
+},
+{
+  "id": "015",
+  "law": "Code on Social Security, 2020",
+  "section": "Section 32 - Benefits",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Social Security Benefits",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf"
+},
+{
+  "id": "016",
+  "law": "Code on Social Security, 2020",
+  "section": "Section 53 - Payment of gratuity",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Gratuity",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf"
+},
+{
+  "id": "017",
+  "law": "Occupational Safety, Health and Working Conditions Code, 2020",
+  "section": "Section 6 - Duties of employer",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Employer Responsibilities",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22041/1/a2020-37.pdf"
+},
+{
+  "id": "018",
+  "law": "Occupational Safety, Health and Working Conditions Code, 2020",
+  "section": "Section 14 - Rights of employee",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Employee Rights",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22041/1/a2020-37.pdf"
+},
+{
+  "id": "019",
+  "law": "Occupational Safety, Health and Working Conditions Code, 2020",
+  "section": "Section 23 - Responsibility of employer for maintaining health, safety and working conditions",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Workplace Safety",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22041/1/a2020-37.pdf"
+},
+{
+  "id": "020",
+  "law": "Occupational Safety, Health and Working Conditions Code, 2020",
+  "section": "Section 27 - Extra wages for overtime",
+  "old_law": null,
+  "old_section": null,
+  "topic": "Overtime",
+  "effective_from": "2025-11-21",
+  "source_url": "https://www.indiacode.nic.in/bitstream/123456789/22041/1/a2020-37.pdf"
+}
 ]
