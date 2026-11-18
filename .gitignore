@@ -18,3 +18,7 @@ data/raw/
 .vscode/
 .idea/
 .DS_Store
+__pycache__/
+*.py[cod]
+.env
+.venv/
