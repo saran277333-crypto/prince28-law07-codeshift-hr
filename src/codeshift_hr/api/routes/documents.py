@@ -1,53 +1,64 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+"""Document endpoints backed by PostgreSQL."""
 
-from codeshift_hr.api.deps import get_store
-from codeshift_hr.store import RecordStore
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+
+from codeshift_hr.api.deps import get_repo
+from codeshift_hr.db.repository import FILTER_KEY, DocumentRepository
 
 router = APIRouter(prefix="/v1/documents", tags=["documents"])
 
 
-# Get all documents with search and pagination
 @router.get("")
-def list_documents(
+async def list_documents(
+    request: Request,
     q: str | None = None,
     limit: int = Query(default=20, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
-    store: RecordStore = Depends(get_store),  # noqa: B008
+    repo: DocumentRepository = Depends(get_repo),  # noqa: B008
 ):
-    records = store.get_all()
+    """Get documents with search, metadata filters and pagination."""
 
-    # Search documents
-    if q:
-        search_text = q.lower()
+    reserved = {"q", "limit", "offset"}
+    filters = {}
 
-        records = [
-            record
-            for record in records
-            if any(
-                search_text in str(value).lower()
-                for value in record.values()
-                if value is not None
+    for key, value in request.query_params.items():
+        if key in reserved:
+            continue
+
+        if not FILTER_KEY.fullmatch(key):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid filter name: '{key}'.",
             )
-        ]
 
-    # Pagination
-    total = len(records)
-    items = records[offset : offset + limit]
+        filters[key] = value
 
-    return {"total": total, "items": items}
+    total, items = await repo.list(
+        q=q,
+        filters=filters,
+        limit=limit,
+        offset=offset,
+    )
+
+    return {
+        "total": total,
+        "items": items,
+    }
 
 
-# Get one document using its ID
 @router.get("/{document_id}")
-def get_document(
+async def get_document(
     document_id: str,
-    store: RecordStore = Depends(get_store),  # noqa: B008
+    repo: DocumentRepository = Depends(get_repo),  # noqa: B008
 ):
-    document = store.get_by_id(document_id)
+    """Get one document using its ID."""
+
+    document = await repo.get(document_id)
 
     if document is None:
         raise HTTPException(
-            status_code=404, detail=f"No document with id '{document_id}'."
+            status_code=404,
+            detail=f"No document with id '{document_id}'.",
         )
 
     return document

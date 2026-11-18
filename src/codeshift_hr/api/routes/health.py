@@ -1,5 +1,9 @@
-from fastapi import APIRouter, Request
+"""Health and readiness endpoints."""
+
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+
+from codeshift_hr.api.deps import check_db
 
 router = APIRouter()
 
@@ -10,16 +14,17 @@ def health_check():
 
 
 @router.get("/ready")
-def readiness_check(request: Request):
-
-    store = request.app.state.store
-
-    records_loaded = len(store.get_all()) > 0
-
-    if not records_loaded:
+async def readiness_check(database: bool = Depends(check_db)):
+    if not database:
         return JSONResponse(
             status_code=503,
-            content={"status": "not_ready", "checks": {"records_loaded": False}},
+            content={
+                "status": "not_ready",
+                "checks": {"database": False},
+            },
         )
 
-    return {"status": "ready", "checks": {"records_loaded": True}}
+    return {
+        "status": "ready",
+        "checks": {"database": True},
+    }
