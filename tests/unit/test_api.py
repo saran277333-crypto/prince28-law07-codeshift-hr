@@ -1,3 +1,9 @@
+import asyncio
+import socket
+
+from codeshift_hr.api.deps import check_db
+
+
 def test_health(client):
     response = client.get("/health")
     assert response.status_code == 200
@@ -15,6 +21,23 @@ def test_not_ready(client, db_state):
     response = client.get("/ready")
     assert response.status_code == 503
     assert response.json()["checks"]["database"] is False
+
+
+def test_check_db_returns_false_on_socket_error(monkeypatch):
+    class FailedConnect:
+        async def __aenter__(self):
+            raise socket.gaierror("database host could not be resolved")
+
+        async def __aexit__(self, *_):
+            return False
+
+    class FailedEngine:
+        def connect(self):
+            return FailedConnect()
+
+    monkeypatch.setattr("codeshift_hr.api.deps.engine", FailedEngine())
+
+    assert asyncio.run(check_db()) is False
 
 
 def test_list_documents(client):
