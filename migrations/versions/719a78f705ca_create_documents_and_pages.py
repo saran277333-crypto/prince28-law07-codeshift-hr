@@ -29,9 +29,7 @@ def upgrade() -> None:
         sa.Column("title", sa.Text(), nullable=False),
         sa.Column("source_url", sa.Text(), nullable=True),
         sa.Column("licence", sa.String(length=200), nullable=True),
-        sa.Column(
-            "doc_type", sa.String(length=50), server_default="record", nullable=False
-        ),
+        sa.Column("doc_type", sa.String(length=50), server_default="record", nullable=False),
         sa.Column("published_on", sa.Date(), nullable=True),
         sa.Column("sha256", sa.String(length=64), nullable=False),
         sa.Column(
@@ -73,9 +71,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id", name=op.f("pk_pages")),
         sa.UniqueConstraint("document_id", "page_no", name="uq_pages_document_page"),
     )
-    op.create_index(
-        op.f("ix_pages_document_id"), "pages", ["document_id"], unique=False
-    )
+    op.create_index(op.f("ix_pages_document_id"), "pages", ["document_id"], unique=False)
     # ### end Alembic commands ###
 
 

@@ -86,12 +86,7 @@ async def main() -> None:
     finally:
         await engine.dispose()
 
-    print(
-        f"records={len(records)} "
-        f"inserted={inserted} "
-        f"updated={updated} "
-        f"unchanged={unchanged}"
-    )
+    print(f"records={len(records)} inserted={inserted} updated={updated} unchanged={unchanged}")
 
 
 if __name__ == "__main__":

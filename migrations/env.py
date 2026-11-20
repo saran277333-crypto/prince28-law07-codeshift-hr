@@ -6,15 +6,14 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+from codeshift_hr.config import get_settings
+from codeshift_hr.db.models import Base
 from codeshift_hr.db.url import to_asyncpg_url
 
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
-
-from codeshift_hr.config import get_settings
-from codeshift_hr.db.models import Base
 
 target_metadata = Base.metadata
 

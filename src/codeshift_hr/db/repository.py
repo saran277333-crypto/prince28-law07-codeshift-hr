@@ -73,9 +73,7 @@ class DocumentRepository:
                 )
             )
 
-        total = await self.session.scalar(
-            select(func.count()).select_from(stmt.subquery())
-        )
+        total = await self.session.scalar(select(func.count()).select_from(stmt.subquery()))
 
         rows = await self.session.scalars(
             stmt.order_by(Document.external_id).limit(limit).offset(offset)
@@ -84,8 +82,6 @@ class DocumentRepository:
         return total or 0, [to_dict(doc) for doc in rows]
 
     async def get(self, external_id: str) -> dict[str, Any] | None:
-        doc = await self.session.scalar(
-            select(Document).where(Document.external_id == external_id)
-        )
+        doc = await self.session.scalar(select(Document).where(Document.external_id == external_id))
 
         return to_dict(doc) if doc else None
