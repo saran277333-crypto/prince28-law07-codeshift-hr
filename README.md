@@ -121,3 +121,8 @@ uv run ruff check .
 
 ## Author
 Developed as part of the CodeShift HR project.
+[![CI](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml/badge.svg)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml)
+[![Live](https://img.shields.io/website?url=https%3A%2F%2Fgithub.com%2Fsaran277333-crypto%2Fprince28-law07-codeshift-hr.git%2Fhealth&label=live)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/docs)
+[![Uptime (30 days)](https://img.shields.io/uptimerobot/ratio/YOUR-MONITOR-KEY)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/health)
+
+**Live:** https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git · [API docs](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/docs) · [health](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/health)
