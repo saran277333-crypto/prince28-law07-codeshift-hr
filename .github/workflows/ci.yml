@@ -18,6 +18,11 @@ jobs:
   test:
     name: lint and test
     runs-on: ubuntu-latest
+    env:
+      APP_ENV: ci
+      DATABASE_URL: postgresql://app:app@localhost:5433/app  # pragma: allowlist secret
+      TEST_DATABASE_URL: postgresql://app:app@localhost:5433/app  # pragma: allowlist secret
+      JWT_SECRET: ci-test-secret-not-for-production  # pragma: allowlist secret
     services:
       postgres:  # same image as docker compose: dev = CI
         image: pgvector/pgvector:pg17
@@ -29,11 +34,9 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U app -d app"
           --health-interval 5s --health-timeout 3s --health-retries 10
-    env:
-      TEST_DATABASE_URL: postgresql://app:app@localhost:5433/app  # pragma: allowlist secret
     steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           version: "0.11.32"
           enable-cache: true
