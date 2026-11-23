@@ -43,6 +43,7 @@ async def list_documents(
     return {
         "total": total,
         "items": items,
+        "filters": filters,
     }
 
 

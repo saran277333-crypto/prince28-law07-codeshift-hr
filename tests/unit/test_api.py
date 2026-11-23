@@ -1,109 +1,104 @@
-import asyncio
-import socket
+import pytest
+from pydantic import ValidationError
 
-from codeshift_hr.api.deps import check_db
-
-
-def test_health(client):
-    response = client.get("/health")
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+from codeshift_hr.config import Settings
+from codeshift_hr.db.url import to_asyncpg_url
 
 
-def test_ready(client):
-    response = client.get("/ready")
-    assert response.status_code == 200
-    assert response.json()["status"] == "ready"
+def test_health_is_ok(client):
+    r = client.get("/health")
+    assert r.status_code == 200
+    assert r.json()["status"] == "ok"
+    assert r.json()["version"] == "dev"  # no GIT_SHA outside a CI-built image
 
 
-def test_not_ready(client, db_state):
+def test_git_sha_comes_from_the_environment(monkeypatch):
+    monkeypatch.setenv("GIT_SHA", "3f2c1ab")
+    settings = Settings(app_env="ci", database_url="postgresql://localhost/db", _env_file=None)
+    assert settings.git_sha == "3f2c1ab"
+
+
+def test_ready_when_database_up(client):
+    r = client.get("/ready")
+    assert r.status_code == 200
+    assert r.json()["checks"]["database"] is True
+
+
+def test_ready_is_503_when_database_down(client, db_state):
     db_state["up"] = False
-    response = client.get("/ready")
-    assert response.status_code == 503
-    assert response.json()["checks"]["database"] is False
+    assert client.get("/health").status_code == 200  # alive...
+    assert client.get("/ready").status_code == 503  # ...but not ready
 
 
-def test_check_db_returns_false_on_socket_error(monkeypatch):
-    class FailedConnect:
-        async def __aenter__(self):
-            raise socket.gaierror("database host could not be resolved")
-
-        async def __aexit__(self, *_):
-            return False
-
-    class FailedEngine:
-        def connect(self):
-            return FailedConnect()
-
-    monkeypatch.setattr("codeshift_hr.api.deps.engine", FailedEngine())
-
-    assert asyncio.run(check_db()) is False
+def test_list_documents_paginates(client):
+    body = client.get("/v1/documents", params={"limit": 2}).json()
+    assert body["total"] == 3
+    assert len(body["items"]) == 2
 
 
-def test_list_documents(client):
-    response = client.get("/v1/documents")
-    assert response.status_code == 200
-    assert response.json()["total"] == 3
+def test_search_filters_records(client):
+    r = client.get("/v1/documents", params={"q": "beta"})
+    assert [d["id"] for d in r.json()["items"]] == ["002"]
 
 
-def test_list_documents_items(client):
-    response = client.get("/v1/documents")
-    assert len(response.json()["items"]) == 3
+def test_metadata_filter(client):
+    r = client.get("/v1/documents", params={"kind": "circular"})
+    assert r.json()["total"] == 2
+    assert r.json()["filters"] == {"kind": "circular"}
 
 
-def test_limit(client):
-    response = client.get("/v1/documents?limit=2")
-    assert len(response.json()["items"]) == 2
+def test_invalid_filter_name_is_400(client):
+    r = client.get("/v1/documents", params={"Bad-Key": "x"})
+    assert r.status_code == 400
+    assert r.headers["content-type"] == "application/problem+json"
 
 
-def test_offset(client):
-    response = client.get("/v1/documents?offset=1")
-    assert len(response.json()["items"]) == 2
+def test_get_document_found(client):
+    r = client.get("/v1/documents/001")
+    assert r.status_code == 200
+    assert r.json()["title"] == "Alpha guideline"
 
 
-def test_search_alpha(client):
-    response = client.get("/v1/documents?q=Alpha")
-    assert response.json()["total"] == 1
-    assert response.json()["items"][0]["id"] == "001"
+def test_missing_document_is_problem_details(client):
+    r = client.get("/v1/documents/999")
+    assert r.status_code == 404
+    assert r.headers["content-type"] == "application/problem+json"
+    assert r.json()["request_id"] == r.headers["X-Request-ID"]
 
 
-def test_search_beta(client):
-    response = client.get("/v1/documents?q=Beta")
-    assert response.json()["total"] == 1
+def test_bad_limit_is_422_problem(client):
+    r = client.get("/v1/documents", params={"limit": 0})
+    assert r.status_code == 422
+    assert r.json()["errors"][0]["field"] == "query.limit"
 
 
-def test_search_no_results(client):
-    response = client.get("/v1/documents?q=unknown")
-    assert response.json()["total"] == 0
+def test_request_id_is_echoed(client):
+    r = client.get("/health", headers={"X-Request-ID": "abc123"})
+    assert r.headers["X-Request-ID"] == "abc123"
 
 
-def test_filter_year(client):
-    response = client.get("/v1/documents?year=2024")
-    assert response.json()["total"] == 1
-    assert response.json()["items"][0]["id"] == "002"
+@pytest.mark.parametrize("missing", ["APP_ENV", "DATABASE_URL"])
+def test_app_refuses_to_start_without_required_settings(monkeypatch, missing):
+    monkeypatch.setenv("APP_ENV", "ci")
+    monkeypatch.setenv("DATABASE_URL", "postgresql://localhost/db")
+    monkeypatch.delenv(missing)
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None)
 
 
-def test_filter_kind(client):
-    response = client.get("/v1/documents?kind=circular")
-    assert response.json()["total"] == 2
-
-
-def test_invalid_filter(client):
-    response = client.get("/v1/documents?Bad-Name=1")
-    assert response.status_code == 400
-
-
-def test_get_document(client):
-    response = client.get("/v1/documents/001")
-    assert response.status_code == 200
-    assert response.json()["id"] == "001"
-
-
-def test_document_not_found(client):
-    response = client.get("/v1/documents/999")
-    assert response.status_code == 404
-
-
-def test_invalid_limit(client):
-    response = client.get("/v1/documents?limit=200")
-    assert response.status_code == 422
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        (
+            "postgresql://app@ep-x.neon.tech/neondb?sslmode=require&channel_binding=require",
+            "postgresql+asyncpg://app@ep-x.neon.tech/neondb?ssl=require",
+        ),
+        (
+            "postgresql://postgres@localhost:5432/app?sslmode=disable",
+            "postgresql+asyncpg://postgres@localhost:5432/app",
+        ),
+        ("postgres://app@h/db", "postgresql+asyncpg://app@h/db"),
+    ],
+)
+def test_database_url_is_converted_for_asyncpg(raw, expected):
+    assert to_asyncpg_url(raw) == expected

@@ -1,53 +1,39 @@
+"""Every error leaves the API in one shape: RFC 9457 problem details."""
+
 from http import HTTPStatus
 
-from fastapi import Request
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from codeshift_hr.logging_setup import request_id_ctx
 
-def get_request_id(request: Request):
-    return getattr(request.state, "request_id", None)
+PROBLEM_JSON = "application/problem+json"
 
 
-def create_problem(request, status_code, title, detail):
-    request_id = get_request_id(request)
-
-    return {
+def problem_response(request: Request, status: int, detail: str, **extra: object) -> JSONResponse:
+    body = {
         "type": "about:blank",
-        "title": title,
-        "status": status_code,
+        "title": HTTPStatus(status).phrase,
+        "status": status,
         "detail": detail,
         "instance": request.url.path,
-        "request_id": request_id,
+        "request_id": request_id_ctx.get(),
+        **extra,
     }
+    return JSONResponse(body, status_code=status, media_type=PROBLEM_JSON)
 
 
-async def http_exception_handler(request: Request, exc: StarletteHTTPException):
-    title = HTTPStatus(exc.status_code).phrase
-
-    body = create_problem(request, exc.status_code, title, str(exc.detail))
-
-    return JSONResponse(
-        status_code=exc.status_code,
-        content=body,
-        media_type="application/problem+json",
-        headers=exc.headers,
-    )
+async def http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    return problem_response(request, exc.status_code, str(exc.detail))
 
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    body = create_problem(request, 422, "Validation Error", "Request validation failed.")
-
-    body["errors"] = [
-        {"field": ".".join(str(item) for item in error["loc"]), "message": error["msg"]}
-        for error in exc.errors()
-    ]
-
-    return JSONResponse(status_code=422, content=body, media_type="application/problem+json")
+async def validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
+    errors = [{"field": ".".join(map(str, e["loc"])), "msg": e["msg"]} for e in exc.errors()]
+    return problem_response(request, 422, "Some request values are invalid.", errors=errors)
 
 
-def register_error_handlers(app):
-    app.add_exception_handler(StarletteHTTPException, http_exception_handler)
-
-    app.add_exception_handler(RequestValidationError, validation_exception_handler)
+def register_error_handlers(app: FastAPI) -> None:
+    app.add_exception_handler(StarletteHTTPException, http_error)
+    app.add_exception_handler(RequestValidationError, validation_error)

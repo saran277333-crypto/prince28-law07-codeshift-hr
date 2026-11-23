@@ -4,21 +4,13 @@ __pycache__/
 .venv/
 .pytest_cache/
 .ruff_cache/
-
-# Secrets
+# Secrets: never commit
 .env
 .env.*
-
 !.env.example
-
-# Big data
+# Big data stays out of Git
 data/raw/
-
 # Editors / OS
 .vscode/
 .idea/
 .DS_Store
-__pycache__/
-*.py[cod]
-.env
-.venv/
