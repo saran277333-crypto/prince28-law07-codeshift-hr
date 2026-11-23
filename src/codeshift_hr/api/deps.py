@@ -30,5 +30,5 @@ async def check_db() -> bool:
         async with engine.connect() as connection:
             await connection.execute(text("SELECT 1"))
         return True
-    except SQLAlchemyError:
+    except (SQLAlchemyError, OSError):
         return False
