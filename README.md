@@ -1,5 +1,7 @@
 # CodeShift HR
 
+[![CI](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml/badge.svg)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml)
+
 Helps HR teams move to India's four labour codes (in force from 21 November 2025), mapping old laws to new sections and checking salary structures.
 
 **Status:** Day 1 foundation (FastAPI skeleton, quality gates). Live URL from Day 5.
