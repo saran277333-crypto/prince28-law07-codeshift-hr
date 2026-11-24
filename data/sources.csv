@@ -1,0 +1,12 @@
+# Sources for CodeShift HR
+# Official Indian labour laws and government documents
+url,source,licence,title
+https://www.indiacode.nic.in/bitstream/123456789/15793/1/aA2019-29.pdf,india_code,"Public legal text; cite Act and section; verify reuse terms",Code on Wages 2019
+https://www.indiacode.nic.in/bitstream/123456789/22040/1/A2020-35.pdf,india_code,"Public legal text; cite Act and section; verify reuse terms",Industrial Relations Code 2020
+https://www.indiacode.nic.in/bitstream/123456789/16823/1/aA2020-36.pdf,india_code,"Public legal text; cite Act and section; verify reuse terms",Code on Social Security 2020
+https://www.indiacode.nic.in/bitstream/123456789/22041/1/2020-37.pdf,india_code,"Public legal text; cite Act and section; verify reuse terms",OSH Working Conditions Code 2020
+https://www.labour.gov.in/static/uploads/2026/05/6eb0c35ba63b776487a025e5123b6b12.pdf,labour_ministry,"Government legal document; cite rule and notification; verify reuse terms",Code on Wages Central Rules 2026
+https://www.labour.gov.in/static/uploads/2026/01/0ea4e7d1b8f264a8cd27bb4560e9202c.pdf,labour_ministry,"Government legal document; cite rule and notification; verify reuse terms",Industrial Relations Central Rules
+https://www.labour.gov.in/static/uploads/2026/05/49aa9b62c2125499c37399b90e969d67.pdf,labour_ministry,"Government legal document; cite rule and notification; verify reuse terms",Social Security Central Rules 2026
+https://www.labour.gov.in/static/uploads/2026/05/ee246f790cad0b8e99c3828f34fa09a6.pdf,labour_ministry,"Government legal document; cite rule and notification; verify reuse terms",OSH Central Rules 2026
+https://www.labour.gov.in/static/uploads/2026/01/de4758d5bfeffc456d7de97a801891b0.pdf,labour_ministry,"Government publication; cite Ministry and document date; verify reuse terms",FAQs on Labour Codes

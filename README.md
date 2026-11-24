@@ -1,128 +1,79 @@
 # CodeShift HR
 
-## 1. Project Overview
-CodeShift HR is an HR Legal Document API designed to help users access and search information from Indian labour laws and legal documents.
+[![CI](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml/badge.svg)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml)
 
-## 2. Target User
-- HR professionals
-- HR managers
-- Employees
-- Legal and compliance teams
+**Live:** https://codeshift-hr.onrender.com
 
-## 3. Problem Statement
-Finding relevant information from multiple labour laws and legal documents can be time-consuming. Users need a simple way to retrieve legal information quickly and efficiently.
+Helps HR teams move to India's four labour codes (in force from 21 November 2025), mapping old laws to new sections and checking salary structures.
 
-CodeShift HR aims to make this information easier to access through an API.
+**Status:** Day 1 foundation (FastAPI skeleton, quality gates). Live URL from Day 5.
 
-## 4. Data Sources
-The project uses sample legal document records stored in JSON format.
+## Who it's for
 
-Current sample records include:
-- Code on Wages, 2019
-- Industrial Relations Code, 2020
-- Code on Social Security, 2020
+HR executive at a 600-employee IT services company in Chennai updating salary structures and policies for the new labour codes.
 
-## 5. Main Features
-- Health check API
-- Application readiness check
-- Retrieve legal documents
-- Search and filter documents
-- Pagination
-- Retrieve a document using its ID
-- JSON-formatted error responses
-- Request ID and execution-time logging
+## The problem
 
-## 6. Technology Stack
-- Python 3.12
-- FastAPI
-- Pydantic Settings
-- Uvicorn
-- Pytest
-- Ruff
-- Git and GitHub
+Four codes replaced 29 labour laws; central rules followed in 2026 and states issue their own rules. HR teams don't know which old section maps where or how the new 'wages' definition affects PF and gratuity.
 
-## 7. Hardest Problem (D01)
-**Hardest problem:** Maintaining a clean and reliable API structure while handling configuration, document loading, request processing, and error responses.
+## Data sources
 
-## 8. Target Metric (D01)
-**Target metric:** Successfully return the correct document data through the API, with all automated tests passing.
+Code on Wages 2019, Industrial Relations Code 2020, Code on Social Security 2020, OSH Code 2020, central rules, Tamil Nadu rules, ministry FAQs, and the 29 repealed Acts.
 
-Current validation: 10 automated tests passed.
+- https://labour.gov.in/
+- https://www.indiacode.nic.in/
+- Terms: Public law. Cite code, section and notification.
 
-## 9. Project Structure
-```text
-src/
-    codeshift_hr/
-        api/
-            routes/
-            main.py
-        config.py
-        logging_setup.py
-        store.py
+## Hardest problem (my interview story)
 
-data/
-    sample_records.json
+Old-to-new mapping and dates: answers must say which law applied before 21 November 2025 and which applies now, map sections, and check the 'wages' rule (allowances above 50% added back) on real salary structures in code.
 
-docs/
-    QUESTIONS.md
-    REQUIREMENTS.md
+## Signature feature
 
-tests/
-```
+Salary structure checker: upload a CTC breakup and see whether 'wages' meet the code definition, with PF and gratuity impact.
 
-## 10. Installation and Execution
+## Target metric
 
-Install dependencies:
+Old-to-new mapping correct for 90%+ of 50 sections; salary checks exact for 20 test structures.
+
+## Run it locally
 
 ```bash
 uv sync
-```
-
-Run the application:
-
-```bash
+cp .env.example .env   # Windows: copy .env.example .env
 uv run uvicorn codeshift_hr.api.main:create_app --factory --reload
 ```
 
-Open Swagger documentation:
+Then open http://localhost:8000/docs
 
-```text
-http://127.0.0.1:8000/docs
-```
-
-## 11. API Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/health` | Health check |
-| GET | `/ready` | Readiness check |
-| GET | `/v1/documents` | Get all documents |
-| GET | `/v1/documents/{id}` | Get document by ID |
-
-## 12. Testing
-
-Run automated tests:
+## Checks
 
 ```bash
 uv run pytest
-```
-
-Run code quality checks:
-
-```bash
 uv run ruff check .
 ```
+## Run locally in one command
 
-## 13. Future Improvements
-- Connect a real legal document database.
-- Add advanced document search.
-- Add authentication and authorization.
-- Integrate AI-based legal document analysis.
+You need Docker Desktop running. From a fresh clone:
 
-## Author
-Developed as part of the CodeShift HR project.
-[![CI](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml/badge.svg)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr/actions/workflows/ci.yml)
-[![Live](https://img.shields.io/website?url=https%3A%2F%2Fgithub.com%2Fsaran277333-crypto%2Fprince28-law07-codeshift-hr.git%2Fhealth&label=live)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/docs)
-[![Uptime (30 days)](https://img.shields.io/uptimerobot/ratio/YOUR-MONITOR-KEY)](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/health)
+```bash
+docker compose up --build
+```
 
-**Live:** https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git · [API docs](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/docs) · [health](https://github.com/saran277333-crypto/prince28-law07-codeshift-hr.git/health)
+This starts Postgres (with pgvector), Redis, runs the migrations and loads the sample data once, then starts the API.
+
+- API docs: http://localhost:8000/docs
+- Liveness: http://localhost:8000/health
+- Readiness (checks the database): http://localhost:8000/ready
+
+Stop with `Ctrl+C`, then `docker compose down`. Add `-v` to also delete the database volume.
+
+## Develop and test
+
+| Task | Mac / Linux | Windows |
+|---|---|---|
+| Run the API with reload | `make dev` | `uv run poe dev` |
+| Unit tests (no network) | `make test` | `uv run poe test` |
+| Integration tests (needs `docker compose up`) | `make test-integration` | `uv run poe test-integration` |
+| Coverage report | `make cov` | `uv run poe cov` |
+| Lint and format check | `make lint` | `uv run poe lint` |
