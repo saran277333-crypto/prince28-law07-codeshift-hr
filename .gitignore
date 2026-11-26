@@ -18,3 +18,4 @@ data/raw/
 .coverage.*
 __pycache__/
 *.pyc
+eval/cache/

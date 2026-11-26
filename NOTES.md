@@ -245,3 +245,43 @@ Status: Pending execution.
 - Average per answered question: Rs ___ (my Day 1 target: under Rs 0.50)
 
 ### One thing that went wrong today, and how I fixed it
+
+## D09 · Prompt versions compared
+
+<!-- prompts:start -->
+
+| Prompt version | Correct | Accuracy | Invalid replies | Avg tokens in |
+|---|---|---|---|---|
+| classify_v1 | 11/20 | 55% | 1 | 113 |
+| classify_v2 | 18/20 | 90% | 1 | 301 |
+| classify_v3 | 18/20 | 90% | 1 | 441 |
+| classify_v4 | 18/20 | 90% | 0 | 459 |
+
+
+### D09 · Prompts and structured output
+
+- My best router prompt: classify_v__ with ___ / 20
+- What I changed in v4, and what happened to the score:
+- The question my best version still gets wrong (line, wanted, got), and why I think so:
+- A label in my test set that I changed after seeing the results (or "none"):
+- Input tokens per question: v1 ___ , best version ___ . Is the extra accuracy worth it?
+
+### My contract (DocMeta)
+
+- Fields I kept from my project card:
+- Fields I deleted, and why they make no sense per document:
+- The field I tightened, and how:
+
+### Extraction run
+
+- Prompt version: extract_v__ · documents: ___ ok, ___ repaired, ___ failed (of ___ parsed)
+- Not finished? Why, and how many are left:
+- Most common failure reason, and what I did about it:
+- A record that was valid but wrong (document, field, what it said, what is true):
+- Cost at list price: Rs ___ in total, Rs ___ per document
+
+### One thing that went wrong today, and how I fixed it
+
+
+
+<!-- prompts:end -->
