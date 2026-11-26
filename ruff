@@ -1,0 +1,32 @@
+Poe the Poet (version 0.49.0)
+
+Error: Unrecognized task '='
+
+Usage:
+  poe [global options] task [task arguments]
+
+Global options:
+  -h [TASK], --help [TASK]
+                        Show this help page and exit, optionally supply a
+                        task.
+  --version             Print the version and exit
+  -v, --verbose         Increase output (repeatable)
+  -q, --quiet           Decrease output (repeatable)
+  -d, --dry-run         Print the task contents but don't actually run it
+  -C PATH, --directory PATH
+                        Specify where to find the pyproject.toml
+  -e EXECUTOR, --executor EXECUTOR
+                        Override the default task executor
+  -X KEY[=VALUE], --executor-opt KEY[=VALUE]
+                        Set executor configuration for this run.
+  --ansi                Force enable ANSI output
+  --no-ansi             Force disable ANSI output
+
+Configured tasks:
+  dev
+  lint
+  test
+  cov
+  migrate
+  seed
+  test-integration      Integration tests against the Postgres from docker compose (run `make up` first)

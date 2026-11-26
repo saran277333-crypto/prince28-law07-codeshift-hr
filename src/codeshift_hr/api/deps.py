@@ -1,46 +1,61 @@
-"""FastAPI dependencies for database access."""
+"""Dependencies: endpoints ask for these instead of building them."""
 
+import asyncio
 from collections.abc import AsyncIterator
 from typing import Annotated
 
 from fastapi import Depends, Request
 from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from codeshift_hr.config import Settings
+from codeshift_hr.db.llm_calls import UsageRepository
 from codeshift_hr.db.repository import DocumentRepository
-from codeshift_hr.db.session import SessionLocal, engine
+from codeshift_hr.llm.gateway import LLMGateway
 
 
 def get_app_settings(request: Request) -> Settings:
     return request.app.state.settings
 
 
-SettingsDep = Annotated[Settings, Depends(get_app_settings)]
-
-
-async def get_session() -> AsyncIterator[AsyncSession]:
-    """Create one database session per request."""
-    async with SessionLocal() as session:
+async def get_session(request: Request) -> AsyncIterator[AsyncSession]:
+    """One session per request, closed automatically afterwards."""
+    async with request.app.state.sessionmaker() as session:
         yield session
 
 
-async def get_repo(
-    session: AsyncSession = Depends(get_session),  # noqa: B008
-) -> DocumentRepository:
-    """Provide the document repository."""
+async def get_repo(session: Annotated[AsyncSession, Depends(get_session)]) -> DocumentRepository:
     return DocumentRepository(session)
 
 
-async def check_db() -> bool:
-    """Check whether PostgreSQL is reachable."""
+async def check_db(request: Request) -> bool:
+    """Can we run SELECT 1 within 2 seconds?"""
     try:
-        async with engine.connect() as connection:
-            await connection.execute(text("SELECT 1"))
+        async with request.app.state.engine.connect() as conn:
+            await asyncio.wait_for(conn.execute(text("SELECT 1")), timeout=2)
         return True
-    except (SQLAlchemyError, OSError):
+    except Exception:
         return False
 
 
+def get_gateway(request: Request) -> LLMGateway:
+    override = request.app.dependency_overrides.get(get_gateway)
+    if override is not None:
+        return override()
+    return request.app.state.gateway
+
+
+async def get_usage_repo(request: Request) -> AsyncIterator[UsageRepository]:
+    override = request.app.dependency_overrides.get(get_usage_repo)
+    if override is not None:
+        yield override()
+        return
+    async with request.app.state.sessionmaker() as session:
+        yield UsageRepository(session)
+
+
+SettingsDep = Annotated[Settings, Depends(get_app_settings)]
+GatewayDep = Annotated[LLMGateway, Depends(get_gateway)]
+UsageDep = Annotated[UsageRepository, Depends(get_usage_repo)]
+RepoDep = Annotated[DocumentRepository, Depends(get_repo)]
 DbCheckDep = Annotated[bool, Depends(check_db)]

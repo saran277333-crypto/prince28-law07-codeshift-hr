@@ -77,3 +77,14 @@ Stop with `Ctrl+C`, then `docker compose down`. Add `-v` to also delete the data
 | Integration tests (needs `docker compose up`) | `make test-integration` | `uv run poe test-integration` |
 | Coverage report | `make cov` | `uv run poe cov` |
 | Lint and format check | `make lint` | `uv run poe lint` |
+
+
+## Live Deployment
+
+**Production URL:** https://codeshift-hr.onrender.com
+
+**Health Check:** https://codeshift-hr.onrender.com/health
+
+**Readiness Check:** https://codeshift-hr.onrender.com/ready
+
+The application is deployed on Render.

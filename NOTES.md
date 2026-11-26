@@ -78,12 +78,58 @@ Response:
 paste the last 4 lines of the "Smoke test the live URL" step
 ```
 
-### Rollback drill
 
-- Rolled back to sha ________ : started __:__, smoke passed __:__ (___ min)
-- Rolled forward to sha ________ : ___ min
-- During the rollback, the database stayed on the newer schema. Why is that safe here? (2 lines)
+## Rollback Drill – D05
 
+### Deployment Information
+
+- Application: CodeShift HR
+- Platform: Render
+- Production URL: https://codeshift-hr.onrender.com
+- Previous deployment SHA: d7111e52e8149cb6f3df128607899d877c722d3e
+- Rollback target SHA: 151fc3dbab27fd545117fcd709166f3821cf10c7
+
+### Rollback Procedure
+
+1. Open Render Dashboard.
+2. Select the CodeShift HR web service.
+3. Navigate to the Deploys page.
+4. Identify the previous successful deployment.
+5. Select the deployment corresponding to the rollback target SHA.
+6. Click Rollback.
+7. Wait until the rollback deployment becomes live.
+8. Verify the application health endpoint.
+9. Verify application logs.
+10. Confirm that the previous version is serving requests.
+
+### Verification
+
+Production health endpoint:
+
+https://codeshift-hr.onrender.com/health
+
+Production readiness endpoint:
+
+https://codeshift-hr.onrender.com/ready
+
+### Expected Results
+
+- Rollback deployment completes successfully.
+- Health endpoint returns HTTP 200.
+- Application reports status: ok.
+- Application is accessible after rollback.
+
+### Recovery
+
+After completing the rollback drill:
+
+1. Redeploy the original known-good deployment.
+2. Verify the health endpoint again.
+3. Re-enable automatic deployments in Render if necessary.
+
+### Result
+
+Status: Pending execution.
 ### Where my secrets live
 
 - Neon string: GitHub Secret DATABASE_URL + Render environment. Not in Git, not in the image.
@@ -162,5 +208,40 @@ paste the last 4 lines of the "Smoke test the live URL" step
 
 - For PDFs I use ________ because (2 lines, with numbers from the table above):
 - A kind of document in my corpus that neither parser handles well:
+
+### One thing that went wrong today, and how I fixed it
+
+
+### D08 · LLM gateway
+
+- Primary: gemini-3.8-flash (Gemini) · fallback: openai/gpt-oss-20b (Groq)
+- First question on my laptop: first words after ___ s, total ___ s, tokens in ___ / out ___, cost Rs ___
+- Same question on my live URL (second, awake request): first words after ___ s. Day 1 target: under 1.5 s
+
+### Tokens: English against Tamil
+
+| Message | tokens in |
+|---|---|
+| "Hi" (baseline: mostly my system prompt) | |
+| The English sentence | |
+| The same sentence in Tamil | |
+
+- The Tamil message needs about ___ times the tokens of the English one.
+
+### What the model does without my documents
+
+- Question 6 ("Will our employees accept the new salary structure?"): did it admit it can't know? Its exact words:
+- A detail it got wrong or invented (question → what it said → what is true):
+- The off-topic question: did it decline in one sentence?
+
+### Fallback and circuit breaker
+
+- With the primary broken: provider ________ , fallback ____ , first words after ___ s
+- The question at which "llm call gemini … error" stopped appearing in the log: number ___
+
+### The bill
+
+- /v1/usage today: calls ___ , errors ___ , fallbacks ___ , cost Rs ___
+- Average per answered question: Rs ___ (my Day 1 target: under Rs 0.50)
 
 ### One thing that went wrong today, and how I fixed it
