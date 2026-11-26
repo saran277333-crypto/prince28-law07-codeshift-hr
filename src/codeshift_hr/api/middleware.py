@@ -33,7 +33,7 @@ class RequestMiddleware(BaseHTTPMiddleware):
 
             except Exception:  # noqa: BLE001
                 # Step 4: Handle unexpected errors
-                logger.error("Unexpected server error", extra={"request_id": request_id})
+                logger.exception("Unexpected server error", extra={"request_id": request_id})
 
                 response = problem_response(request, 500, "An unexpected error occurred.")
 

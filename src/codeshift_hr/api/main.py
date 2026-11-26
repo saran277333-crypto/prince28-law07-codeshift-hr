@@ -6,9 +6,11 @@ from fastapi import FastAPI
 
 from codeshift_hr.api.errors import register_error_handlers
 from codeshift_hr.api.middleware import RequestMiddleware
-from codeshift_hr.api.routes import documents, health
+from codeshift_hr.api.routes import chat, documents, health
 from codeshift_hr.config import Settings, get_settings
-from codeshift_hr.db.session import engine
+from codeshift_hr.db.llm_calls import make_recorder
+from codeshift_hr.db.session import make_engine, make_sessionmaker
+from codeshift_hr.llm.gateway import build_gateway
 from codeshift_hr.logging_setup import setup_logging
 
 
@@ -19,8 +21,12 @@ def create_app(settings: Settings | None = None):
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
+        app.state.engine = make_engine(settings)
+        app.state.sessionmaker = make_sessionmaker(app.state.engine)
+        app.state.system_prompt = chat.load_prompt(settings.prompts_dir)
+        app.state.gateway = build_gateway(settings, make_recorder(app.state.sessionmaker))
         yield
-        await engine.dispose()
+        await app.state.engine.dispose()
 
     app = FastAPI(
         title="CodeShift HR",
@@ -37,5 +43,6 @@ def create_app(settings: Settings | None = None):
 
     app.include_router(health.router)
     app.include_router(documents.router)
+    app.include_router(chat.router)
 
     return app
