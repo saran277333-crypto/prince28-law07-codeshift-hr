@@ -245,6 +245,44 @@ Status: Pending execution.
 - Average per answered question: Rs ___ (my Day 1 target: under Rs 0.50)
 
 ### One thing that went wrong today, and how I fixed it
+### Production Usage Verification
+
+Production URL:
+https://codeshift-hr.onrender.com
+
+Verified on: 2026-11-27
+
+Endpoint tested:
+GET /v1/usage
+
+#### Usage Statistics
+
+| Metric | 2026-11-27 | 2026-11-26 |
+|---|---:|---:|
+| Calls | 2 | 149 |
+| Errors | 2 | 46 |
+| Fallbacks | 0 | 103 |
+| Tokens In | 0 | 63,458 |
+| Tokens Out | 0 | 34,135 |
+| Cost (INR) | 0.00 | 1.425 |
+
+#### Overall Statistics
+
+- Total calls: 151
+- Total cost: ₹1.425
+- Total errors: 48
+- Total fallbacks: 103
+
+#### Production Failure Observation
+
+A live POST request to `/v1/chat` returned HTTP 503.
+
+- Gemini: ReadTimeout.
+- Groq: HTTP 429 (rate limit exceeded).
+
+The gateway correctly reported that no model could answer.
+
+The usage endpoint confirmed that the latest day's two requests were recorded as errors, with zero tokens and zero cost.
 
 ## D09 · Prompt versions compared
 
